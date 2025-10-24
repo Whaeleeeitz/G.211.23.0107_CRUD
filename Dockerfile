@@ -5,10 +5,14 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
 WORKDIR /var/www/html
+
 COPY . .
+
 RUN composer install --optimize-autoloader --no-dev
 RUN a2enmod rewrite
+
 RUN echo '<VirtualHost *:80>\n\
     DocumentRoot /var/www/html/public\n\
     <Directory /var/www/html/public>\n\
